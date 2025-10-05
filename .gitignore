@@ -12,3 +12,6 @@ build_web
 out
 CMakeSettings.json
 CMakeUserPresets.json
+
+# submit dir
+submit
