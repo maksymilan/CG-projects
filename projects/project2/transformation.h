@@ -33,6 +33,8 @@ private:
         glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f)};
 
     std::unique_ptr<GLSLProgram> _shader;
-
+    
+    // count total time elapsed
+    float _elapsedTime = 0.0;
     void initShader();
 };
