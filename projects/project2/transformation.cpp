@@ -88,7 +88,7 @@ void Transformation::handleInput() {
     // update bunnies position / rotation / scale here
     const glm::vec3 velocity = {0.0f, 2.0f, 0.0f};
     const float angulerVelocity = 1.0f;
-    const float scaleRate = 0.2f;
+    const float scaleRate = 0.5f;
 
     // TODO: update transformation attributes
     // write your code here
@@ -99,7 +99,7 @@ void Transformation::handleInput() {
     // --------------------------------------------------
     _positions[0].y = velocity.y * sin(_elapsedTime);
     _rotateAngles[1] += angulerVelocity * _deltaTime;
-    float scaleFactor = 1.0 + scaleRate * cos(_elapsedTime * 2.0);
+    float scaleFactor = 1.0 + scaleRate * cos(_elapsedTime);
     _scales[2] = glm::vec3(scaleFactor,scaleFactor,scaleFactor);
 }
 

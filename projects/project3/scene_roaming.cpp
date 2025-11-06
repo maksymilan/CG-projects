@@ -56,6 +56,7 @@ void SceneRoaming::handleInput() {
         // TODO: move the camera in its front direction
         // write your code here
         // -------------------------------------------------
+        camera->transform.position += camera->transform.getFront() * cameraMoveSpeed * _deltaTime;
         // camera->transform.position = ...;
         // -------------------------------------------------
     }
@@ -65,6 +66,7 @@ void SceneRoaming::handleInput() {
         // TODO: move the camera in its left direction
         // write your code here
         // -------------------------------------------------
+        camera->transform.position -= camera->transform.getRight() * cameraMoveSpeed * _deltaTime;
         // camera->transform.position = ...;
         // -------------------------------------------------
     }
@@ -74,6 +76,7 @@ void SceneRoaming::handleInput() {
         // TODO: move the camera in its back direction
         // write your code here
         // -------------------------------------------------
+        camera->transform.position -= camera->transform.getFront() * cameraMoveSpeed * _deltaTime;
         // camera->transform.position = ...;
         // -------------------------------------------------
     }
@@ -83,6 +86,7 @@ void SceneRoaming::handleInput() {
         // TODO: move the camera in its right direction
         // write your code here
         // -------------------------------------------------
+        camera->transform.position += camera->transform.getRight() * cameraMoveSpeed * _deltaTime;
         // camera->transform.position = ...;
         // -------------------------------------------------
     }
@@ -94,6 +98,9 @@ void SceneRoaming::handleInput() {
         // hint2: mouse_movement_in_x_direction = _input.mouse.move.xNow - _input.mouse.move.xOld
         // write your code here
         // -----------------------------------------------------------------------------
+        float dx = (_input.mouse.move.xNow - _input.mouse.move.xOld) * cameraRotateSpeed;
+        glm::quat deltaYaw = glm::angleAxis(-dx, glm::vec3(0.0f, 1.0f, 0.0f));
+        camera->transform.rotation = deltaYaw * camera->transform.rotation;
         // camera->transform.rotation = ...
         // -----------------------------------------------------------------------------
     }
@@ -105,6 +112,10 @@ void SceneRoaming::handleInput() {
         // hint2: mouse_movement_in_y_direction = _input.mouse.move.yNow - _input.mouse.move.yOld
         // write your code here
         // -----------------------------------------------------------------------------
+        float dy = (_input.mouse.move.yNow - _input.mouse.move.yOld) * cameraRotateSpeed;
+        glm::vec3 localRight = camera->transform.getRight();
+        glm::quat deltaPitch = glm::angleAxis(-dy, localRight);
+        camera->transform.rotation = deltaPitch * camera->transform.rotation;
         // camera->transform.rotation = ...
         // -----------------------------------------------------------------------------
     }
