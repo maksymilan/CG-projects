@@ -151,7 +151,7 @@ void TextureMapping::initBlendShader() {
         "};\n"
 
         "struct Material {\n"
-        "    vec3 kds[2];\n"
+        "    vec3 kds[2];\n" 
         "    float blend;\n"
         "};\n"
 
@@ -160,7 +160,15 @@ void TextureMapping::initBlendShader() {
         "uniform sampler2D mapKds[2];\n"
 
         "void main() {\n"
-        "    color = vec4(material.kds[0], 1.0f);\n"
+        "    vec3 color1 = texture(mapKds[0], fTexCoord).rgb * material.kds[0];\n"
+        "    vec3 color2 = texture(mapKds[1], fTexCoord).rgb * material.kds[1];\n"
+        "    vec3 mixedColor = mix(color1, color2, material.blend);\n"
+        
+        "    vec3 lightDir = normalize(-light.direction);\n"
+        "    vec3 normal = normalize(fNormal);\n"
+        "    vec3 diffuse = light.color * light.intensity * max(dot(normal, lightDir), 0.0) * mixedColor;\n"
+        
+        "    color = vec4(diffuse, 1.0f);\n"
         "}\n";
     //----------------------------------------------------------------
 
@@ -202,7 +210,8 @@ void TextureMapping::initCheckerShader() {
         "uniform Material material;\n"
 
         "void main() {\n"
-        "    color = vec4(material.colors[0], 1.0f);\n"
+        "    bool isEven = (int(floor(fTexCoord.x * material.repeat)) + int(floor(fTexCoord.y * material.repeat))) % 2 == 0;\n"
+        "    color = vec4(isEven ? material.colors[0] : material.colors[1], 1.0f);\n"
         "}\n";
     //----------------------------------------------------------------
 
@@ -275,6 +284,11 @@ void TextureMapping::renderFrame() {
         _blendShader->setUniformFloat("material.blend", _blendMaterial->blend);
         // 4.3 TODO: enable textures and transform textures to gpu
         // write your code here
+        _blendShader->setUniformInt("mapKds[0]", 0);
+        _blendMaterial->mapKds[0]->bind(0);
+        
+        _blendShader->setUniformInt("mapKds[1]", 1);
+        _blendMaterial->mapKds[1]->bind(1);
         //----------------------------------------------------------------
         // ...
         //----------------------------------------------------------------
